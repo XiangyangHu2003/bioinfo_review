@@ -1,32 +1,17 @@
-if __name__ == '__main__':
-    N = int(input())
+from Bio import SeqIO
 
-    ls = []
+x = "data/toy.fasta"
 
-    for _ in range(N):
-        command = input().split()
+seqs = SeqIO.parse(x, "fasta")
+for record in seqs:
+    print(record.id)
+    print(record.seq)
 
-        if command[0] == "insert":
-            i = command[1]
-            e = command[2]
-            ls.insert(i, e)
+species = set()
 
-        if command[0] == "print":
-            print(ls)
+for record in SeqIO.parse(x, "fasta"):
+    parts = record.description.split()
+    id = parts[0]
+    species.add(parts[1])
 
-        if command[0] == "remove":
-            i = command[1]
-            ls.remove(i)
-
-        if command[0] == "append":
-            i = command[1]
-            ls.append(i)
-
-        if command[0] == "sort":
-            ls.sort()
-
-        if command[0] == "pop":
-            ls.pop()
-
-        if command[0] == "reverse":
-            ls.reverse()
+print(species)
