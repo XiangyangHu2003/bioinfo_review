@@ -6,8 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 DATA_DIR = BASE_DIR / "data"
 RAW_DIR = DATA_DIR / "raw"
 REPORT_DIR = BASE_DIR / "reports"
+REPORT_DIR.mkdir(parents=True, exist_ok=True)
 FIG_DIR = REPORT_DIR / "figures"
+FIG_DIR.mkdir(parents=True, exist_ok=True)
 TAB_DIR = REPORT_DIR / "tables"
+TAB_DIR.mkdir(parents=True, exist_ok=True)
 
 pheno = pd.read_csv(RAW_DIR / "phenotype.tsv", sep="\t")
 mtdna = pd.read_csv(RAW_DIR / "mtdna.tsv", sep="\t")
@@ -91,50 +94,55 @@ summary = (merged_clean
 )
 .reset_index())
 print(summary)
+summary.to_csv(TAB_DIR / "ancestry_summary.tsv", sep="\t", index=False)
 
-with open(REPORT_DIR / "qc_report.txt", "w") as f:
+with open(REPORT_DIR / "day02_qc_report.md", "w") as f:
+    f.write("# Day 02 QC Report\n\n")
 
-    f.write("QC REPORT\n")
-    f.write("=========\n\n")
+    f.write("## Input\n")
+    f.write(f"- Phenotype rows: {len(pheno)}\n")
+    f.write(f"- mtDNA rows: {len(mtdna)}\n\n")
 
-    f.write("[Input]\n")
-    f.write(f"Phenotype rows: {len(pheno)}\n")
-    f.write(f"mtDNA rows: {len(mtdna)}\n\n")
+    f.write("## Duplicate QC\n")
+    f.write(f"- Phenotype duplicate IDs: {n_pheno_duplicates}\n")
+    f.write(f"- mtDNA duplicate IDs: {n_mtdna_duplicates}\n\n")
 
-    f.write("[Duplicate QC]\n")
-    f.write(f"Phenotype duplicate IDs: {n_pheno_duplicates}\n")
-    f.write(f"mtDNA duplicate IDs: {n_mtdna_duplicates}\n\n")
+    f.write("## Age QC\n")
+    f.write(f"- Missing ages: {n_missing_age}\n")
+    f.write(f"- Invalid ages: {n_invalid_age}\n")
+    f.write(f"- Phenotype rows after QC: {len(pheno_clean)}\n\n")
 
-    f.write("[Age QC]\n")
-    f.write(f"Missing ages: {n_missing_age}\n")
-    f.write(f"Invalid ages: {n_invalid_age}\n")
-    f.write(f"Phenotype rows after age and duplicate QC: {len(pheno_clean)}\n\n")
+    f.write("## Merge QC\n")
+    f.write(f"- Phenotype-only samples: {n_pheno_only}\n")
+    f.write(f"- mtDNA-only samples: {n_mtdna_only}\n")
+    f.write(f"- Samples after inner merge: {len(merged)}\n\n")
 
-    f.write("[Merge QC]\n")
-    f.write(f"Phenotype-only samples: {n_pheno_only}\n")
-    f.write(f"mtDNA-only samples: {n_mtdna_only}\n")
-    f.write(f"Samples after inner merge: {len(merged)}\n\n")
+    f.write("## mtDNA_CN Outlier QC\n")
+    f.write(f"- Q1: {q1:.2f}\n")
+    f.write(f"- Q3: {q3:.2f}\n")
+    f.write(f"- IQR: {iqr:.2f}\n")
+    f.write(f"- Lower bound: {lower_bound:.2f}\n")
+    f.write(f"- Upper bound: {upper_bound:.2f}\n")
+    f.write(f"- Number of outliers: {len(outliers)}\n")
+    f.write(f"- Final sample count: {len(merged_clean)}\n")
 
-    f.write("[mtDNA_CN Outlier QC]\n")
-    f.write(f"Q1: {q1:.2f}\n")
-    f.write(f"Q3: {q3:.2f}\n")
-    f.write(f"IQR: {iqr:.2f}\n")
-    f.write(f"Lower bound: {lower_bound:.2f}\n")
-    f.write(f"Upper bound: {upper_bound:.2f}\n")
-    f.write(f"Number of outliers: {len(outliers)}\n")
-    f.write(f"Final sample count: {len(merged_clean)}\n")
+
+ancestries = sorted(merged_clean["ancestry"].unique())
+
+data = [
+    merged_clean.loc[
+        merged_clean["ancestry"] == x,
+        "mtDNA_CN"
+    ] for x in ancestries
+]
+
+print(data)
 
 plt.figure()
-plt.hist(
-    merged["mtDNA_CN"],
-    bins=50,
-)
-plt.xlabel("MT-DNA Copy Number")
-plt.ylabel("Count")
-plt.title("Distribution of MT-DNA Copy Number")
-plt.show()
+plt.boxplot(data, tick_labels=ancestries)
+plt.xlabel("Ancestries")
+plt.ylabel("mtDNA copy number")
+plt.title("mtDNA copy number by ancestry")
 plt.tight_layout()
-
-plt.savefig(FIG_DIR / "mtdna_cn_histogram.png",
-            dpi=300)
+plt.savefig(FIG_DIR / "mtdna_by_ancestry.png")
 plt.close()

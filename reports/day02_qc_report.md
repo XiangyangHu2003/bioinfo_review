@@ -1,0 +1,28 @@
+# Day 02 QC Report
+
+## Input
+- Phenotype rows: 100
+- mtDNA rows: 92
+
+## Duplicate QC
+- Phenotype duplicate IDs: 3
+- mtDNA duplicate IDs: 0
+
+## Age QC
+- Missing ages: 7
+- Invalid ages: 2
+- Phenotype rows after QC: 88
+
+## Merge QC
+- Phenotype-only samples: 5
+- mtDNA-only samples: 9
+- Samples after inner merge: 83
+
+## mtDNA_CN Outlier QC
+- Q1: 283.00
+- Q3: 330.70
+- IQR: 47.70
+- Lower bound: 211.45
+- Upper bound: 402.25
+- Number of outliers: 1
+- Final sample count: 82
