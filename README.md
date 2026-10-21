@@ -40,4 +40,13 @@ Interview_Project/
 - Git basics
 
 ### Day2
-- 
+- Pandas data QC
+- Missing-value and duplicate checks
+- Age range validation
+- Dataset merging and join auditing
+- groupby().agg() summary statistics
+- IQR-based outlier detection
+- QC report generation
+- mtDNA copy number visualization by ancestry
+- Rosalind: Counting Point Mutations (Hamming distance)
+- Git commit and push workflow
