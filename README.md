@@ -50,3 +50,14 @@ Interview_Project/
 - mtDNA copy number visualization by ancestry
 - Rosalind: Counting Point Mutations (Hamming distance)
 - Git commit and push workflow
+
+### Day 3
+- R data inspection with `dim()`, `head()`, `str()`, and `summary()`
+- Ancestry-stratified summary statistics with `dplyr`
+- mtDNA copy number distribution plots with `ggplot2`
+- Unadjusted association analysis
+- Adjusted linear and logistic regression
+- Odds ratio and 95% confidence interval interpretation
+- APOE4 interaction analysis
+- Benjamini-Hochberg FDR correction
+- Association vs. causation interpretation
