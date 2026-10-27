@@ -16,3 +16,11 @@
 
 ## Should you just delete all the outliers?
 ### I would not automatically remove an outlier. I would first determine whether it reflects a technical error, a data-entry issue, or true biological variation, and then perform a sensitivity analysis with and without the outlier.
+
+# Day 3 Questions
+
+## Why don't you use t-test?
+### A t-test only compares the unadjusted means between two groups. If variables such as age, sex, or ancestry may confound the association, I would use regression model to estimate the effect of interest while adjusting for those covariates.
+
+## When would you use Poisson regression versus negative binomial regression?
+### I would use Poisson regression for count data when the mean and variance are approximately equal. If the data show substantial overdispersion, meaning the variance is much larger than the mean, I would prefer negative binomial regression because it can account for the extra variability and usually gives more appropriate standard errors.
